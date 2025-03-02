@@ -5,100 +5,148 @@ const Rel_Alternatif = require("../models/index").Rel_Alternatif
 
 exports.createRelAlternatif = async (req, res) => {
     const kode_alternatif = req.params.kode_alternatif
-    const { id_subkriteria, id_subkriteriaSTNK, kode_kriteria } = req.body
-    console.log( kode_alternatif, kode_kriteria, id_subkriteria); 
+    const reqData = req.body
+    const subkriteria = [req.body.subkriteria]
 
-    const values = [
-        { kode_kriteria: 'C1', id_subkriteria: id_subkriteria },
-        { kode_kriteria: 'C2', id_subkriteria: id_subkriteria },
-        // { kode_kriteria: 'C3', id_subkriteria: id_subkriteria },
-        // { kode_kriteria: 'C4', id_subkriteria: id_subkriteria },
-        // { kode_kriteria: 'C5', id_subkriteria: id_subkriteria },
-        // { kode_kriteria: 'C6', id_subkriteria: id_subkriteria }
-    ]
+    // Kriteria.findAll({
+    //     order: [ ['kode_kriteria', 'ASC'] ],
+    //     attributes: ['id', 'kode_kriteria'],
+    // }).then(data => {
+    //     for (let i = 0; i < data.length; i++) {
+    //         const element = data[i].kode_kriteria;
+    //         console.log(element);
+    //         try {
+    //             Rel_Alternatif.findOne({
+    //                 where: { kode_alternatif: kode_alternatif, kode_kriteria: data[i].kode_kriteria }
+    //             }).then( data => {
+    //                 data.id_subkriteria = reqData.subkriteria
+    //                 data.save()
+    //             }).catch(er => console.log(er))
+    //         } catch (error) { console.log(error); }
+    //     }
+    // }).catch(e => console.log(e))
 
-    await Rel_Alternatif.findAll({
-        where: {
-            kode_alternatif: kode_alternatif,
-        }
-    }) 
-    .then(data => { 
-        let id = []
-        data.map(i => {
-            id.push(i.id)
-        })
-        console.log(id);
-        Rel_Alternatif.update(
-            {id_subkriteria},
-            // values,
-            { 
-                where: {
-                    kode_alternatif: kode_alternatif,
-                    kode_kriteria: "C1"
-                },
-                returning: true
-            },
-            // {
-            //     // fields:["id_subkriteria"],
-            //     updateOnDuplicate: [`${id_subkriteria}`,]
-            // }
-        )
-        Rel_Alternatif.update( {id_subkriteria: id_subkriteriaSTNK }, { 
-            where: {
-                kode_alternatif: kode_alternatif,
-                kode_kriteria: "C2"
-            },
-            returning: true
-        })
-        .then(result => {
-            res.status(200).send({
-                updated: result
-            })
-        })
-        .catch(er => {
-            res.status(400).send({
-                msg: "fail update",
-                error: er.message
-            })
-        })
-    })
-    .catch(e => {
-        res.status(503).send({
-            message: "INTERNAL SERVER ERROR",
-            error: e.message
-        })
+    try {
+        // await Rel_Alternatif.findOne({  where: { kode_alternatif: kode_alternatif, kode_kriteria: reqData.kodeBPKB }
+        // }).then( data => {
+        //     data.id_subkriteria = subkriteria
+        //     data.save()
+        // }).catch(er => console.log(er))
+
+        await Rel_Alternatif.findOne({
+            where: { kode_alternatif: kode_alternatif, kode_kriteria: reqData.kodeBPKB }
+        }).then( data => {
+            data.id_subkriteria = reqData.subkriteria_bpkb
+            data.save()
+        }).catch(er => console.log(er))
+    
+        await Rel_Alternatif.findOne({
+            where: { kode_alternatif: kode_alternatif, kode_kriteria: reqData.kodeSTNK }
+        }).then( data => {
+            data.id_subkriteria = reqData.subkriteriaStnk
+            data.save()
+        }).catch(er => console.log(er))
+    
+        await Rel_Alternatif.findOne({
+            where: { kode_alternatif: kode_alternatif, kode_kriteria: reqData.kodePajak }
+        }).then( data => {
+            data.id_subkriteria = reqData.subkriteriaPajak
+            data.save()
+        }).catch(er => console.log(er))
+    
+        await Rel_Alternatif.findOne({
+            where: { kode_alternatif: kode_alternatif, kode_kriteria: reqData.kodeKondisiBody }
+        }).then( data => {
+            data.id_subkriteria = reqData.subkriteriaKondisiBody
+            data.save()
+        }).catch(er => console.log(er))
+    
+        await Rel_Alternatif.findOne({
+            where: { kode_alternatif: kode_alternatif, kode_kriteria: reqData.kodeKondisiMesin }
+        }).then( data => {
+            data.id_subkriteria = reqData.subkriteriaKondisiMesin
+            data.save()
+        }).catch(er => console.log(er))
+    
+        await Rel_Alternatif.findOne({
+            where: { kode_alternatif: kode_alternatif, kode_kriteria: reqData.kodeTahunKeluaran }
+        }).then( data => {
+            data.id_subkriteria = reqData.subkriteriaTahunKeluaran
+            data.save()
+        }).catch(er => console.log(er))
+
+        // UNCOMMENT WHEN EDIT PENILAIAN AFTER ADD NEW CRITERIA DATA
+        // await Rel_Alternatif.findOne({
+        //     where: { kode_alternatif: kode_alternatif, kode_kriteria: reqData.kodeKriteriaBaru }
+        // }).then( data => {
+        //     data.id_subkriteria = reqData.subkriteriaKriteriaBaru
+        //     data.save()
+        // }).catch(er => console.log(er))
+    } catch (error) {
+        console.log(error);
+    }
+    res.status(200).send({
+        msg: "succesfully updated"
     })
 }
 
-const getCriteria = (data) => {
-    const category = [
+const criteria_code = []
+const displayedCriteria = []
+
+// const dipslay = criteria_code.map((item, index) => {
+//     displayedCriteria.push(
+//         {kode_kriteria: `${item}`, nama_subkriteria: '0', id_subkriteria: 0}
+//     )
+//     return displayedCriteria
+// })
+
+const getCriteria = (data) => {  
+    const criteria = [
         { kode_kriteria: 'C1', nama_subkriteria: '0', id_subkriteria: 0 },
         { kode_kriteria: 'C2', nama_subkriteria: '0', id_subkriteria: 0 },
         { kode_kriteria: 'C3', nama_subkriteria: '0', id_subkriteria: 0 },
         { kode_kriteria: 'C4', nama_subkriteria: '0', id_subkriteria: 0 },
         { kode_kriteria: 'C5', nama_subkriteria: '0', id_subkriteria: 0 },
-        { kode_kriteria: 'C6', nama_subkriteria: '0', id_subkriteria: 0 }
+        { kode_kriteria: 'C6', nama_subkriteria: '0', id_subkriteria: 0 },
+        // UNCOMMENT when add NEW CRITERIA
+        // { kode_kriteria: 'C7', nama_subkriteria: '0', id_subkriteria: 0 } 
+        // { kode_kriteria: 'C8', nama_subkriteria: '0', id_subkriteria: 0 } 
     ]
-        
-    for(let i = 0; i < category.length; i++){
-        const match = data.find(item => item.kode_kriteria === category[i].kode_kriteria);
-        if (match) {
-            category[i].nama_subkriteria = match.nama_subkriteria;
-            category[i].id_subkriteria = match.id_subkriteria;
-        }
-    }
 
-    return category
+    for(let i = 0; i < criteria.length; i++){
+        const match = data.find(item => item.kode_kriteria === criteria[i].kode_kriteria);
+        if (match) {
+            criteria[i].nama_subkriteria = match.nama_subkriteria;
+            criteria[i].id_subkriteria = match.id_subkriteria;
+        }
+    }    
+    return criteria 
 }
 
 exports.getRelAlternatifIncludeAll = async (req, res) => {
+    // Kriteria.findAll({
+    //     attributes: ['id', 'kode_kriteria'],
+    //     order: [
+    //         ['id', 'ASC']
+    //     ]
+    // })
+    // .then(result => { 
+    //     result.map((item, index) => {
+    //         criteria_code.push({
+    //             kode_kriteria: `C${index+1}`,
+                
+    //         })
+    //     })
+    //     return criteria_code
+    // }).catch(e => console.log(e))
+
     await Rel_Alternatif.findAll({
         attributes: ['kode_alternatif','kode_kriteria', 'id_subkriteria'],
         include: [
             {
                 model: Alternatif,
                 as: "alternatif",
-                attributes: ['kode_alternatif', 'nama_alternatif']
+                attributes: ['id', 'kode_alternatif', 'nama_alternatif']
             },
             {
                 model: Kriteria,
@@ -114,10 +162,7 @@ exports.getRelAlternatifIncludeAll = async (req, res) => {
     })
     .then(data => {
         const transformedData = new Array();
-        console.log(transformedData);
-
         data.forEach((item) => {
-            // console.log(item.kode_kriteria);
             const existingObject = transformedData.find((obj) => obj.kode_alternatif === item.kode_alternatif);
 
             let nama_subkriteria, id_subkriteria
@@ -137,7 +182,7 @@ exports.getRelAlternatifIncludeAll = async (req, res) => {
                 });
             } else {
                 const newObj = {
-                    id: item.id,
+                    id: item.alternatif.id,
                     kode_alternatif: item.kode_alternatif,
                     nama_alternatif: item.alternatif.nama_alternatif,
                     kriteria: [
@@ -151,17 +196,21 @@ exports.getRelAlternatifIncludeAll = async (req, res) => {
                 transformedData.push(newObj);
             }
         });
+        const indexed = transformedData.map((item, index) => ({ item }));  
+        indexed.sort((a, b) => a.item.id - b.item.id); 
+
         const arr = new Array();
-                
-        for (let m = 0; m < transformedData.length; m++) {
+        
+        for (let m = 0; m < indexed.length; m++) {
             const dataRes = {
-                kode_alternatif: transformedData[m].kode_alternatif,
-                nama_alternatif: transformedData[m].nama_alternatif,
-                kriteria: getCriteria(transformedData[m].kriteria)
+                id: indexed[m].item.id,
+                kode_alternatif: indexed[m].item.kode_alternatif,
+                nama_alternatif: indexed[m].item.nama_alternatif,
+                kriteria: getCriteria(indexed[m].item.kriteria)
             }
             arr.push(dataRes)
         }
-        // console.log(transformedData);
+
         return res.status(200).send({
             arr
         })
@@ -174,56 +223,3 @@ exports.getRelAlternatifIncludeAll = async (req, res) => {
         })
     })
 }
-
-// exports.penilaian = async (req, res) => {
-//     await Alternatif.findAll({
-//         order: [
-//             ['kode_alternatif', 'ASC']
-//         ],
-//         attributes: ['id', 'kode_alternatif', 'nama_alternatif'],
-//         include: {
-//             model: Rel_Alternatif,
-//             as: "rel_alternatif",
-//             attributes: ['id', 'kode_kriteria', 'kode_alternatif', 'id_subkriteria'],
-//             order: [
-//                 ['kode_kriteria', 'ASC']
-//             ],
-//         },
-//     })
-//     .then(data => {
-//         console.log(data.rel_alternatif);
-//         return Sub_Kriteria.findAll({
-//             order: [
-//                 ['id', 'ASC']
-//             ],
-//             attributes: ['id', 'nama_subkriteria', 'bobot_subkriteria']
-//         })
-//         .then(resp => {
-//             const newData = [];
-//             for (let i = 0; i < data.length; i++) {
-//                 console.log(i);
-//                 const criterion = resp.map(a => console.log(a));
-//                 console.log(criterion);
-//                 // const min = Math.min(...criterion);
-//                 // const max = Math.max(...criterion);
-//                 // const normalizedCriterion = criterion.map(value => (value - min) / (max - min));
-//                 // newData.push(normalizedCriterion);
-//                 // console.log(normalizedCriterion);
-//             }
-//             return res.status(200).send({
-//                 data: data,
-//                 // da: resp
-//             })
-//         })
-//         // return res.status(200).send({
-//         //     alternatif: data
-//         // })
-//     })
-//     .catch(e => {
-//         console.log(e);
-//         res.status(503).send({
-//             message: "INTERNAL SERVER ERROR",
-//             error: e.message
-//         })
-//     })
-// }

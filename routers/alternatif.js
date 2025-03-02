@@ -8,16 +8,17 @@ const {
     getAllAlternatif,
     getAlternatifById,
     updateAlternatif,
-    deleteAlternatif
+    deleteAlternatif,
+    getAlternatifByKode
 } = require("../controllers/alternatif.controller")
 
 
 router.post('/createAlternatif', createAlternatif)
 router.get('/count', getAlternatifCount)
 router.get('/getAllAlternatif', getAllAlternatif)
-router.get('/getAlternatifById/:alternatifId', getAlternatifById)
-router.put('/updateAlternatif/:alternatifId', updateAlternatif)
-router.delete('/deleteAlternatif/:alternatifId', deleteAlternatif)
+router.get('/getAlternatifByKode/:kodeAlternatif', getAlternatifByKode)
+router.put('/updateAlternatif/:kodeAlternatif', updateAlternatif)
+router.delete('/deleteAlternatif/:kodeAlternatif', deleteAlternatif)
 
 
 module.exports = router

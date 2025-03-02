@@ -156,7 +156,6 @@ exports.getKriteriaByCode = async(req, res) => {
 exports.updateKriteria = async (req, res) => {
     const kodeKriteria = req.params.kodeKriteria
     const { kode_kriteria, nama_kriteria, bobot_kriteria, jenis_kriteria } = req.body
-    // console.log(kriteriaId);
     console.log(kode_kriteria, nama_kriteria, bobot_kriteria, jenis_kriteria);
 
     await Kriteria.update({ kode_kriteria, nama_kriteria, bobot_kriteria, jenis_kriteria }, {
@@ -168,15 +167,6 @@ exports.updateKriteria = async (req, res) => {
     .then(kriteria => {
         res.status(200).send({
             kriteria: kriteria
-            // {
-            //     id: product[1][0].id,
-            //     title: product[1][0].title,
-            //     price: `Rp. ${product[1][0].price}`,
-            //     stock: product[1][0].stock,
-            //     category_id: product[1][0].category_id,
-            //     createdAt: product[1][0].createdAt,
-            //     updatedAt: product[1][0].updatedAt
-            // }
         })
     })
     .catch(e => {
@@ -190,15 +180,15 @@ exports.updateKriteria = async (req, res) => {
 
 // FUNC UNTUK HAPUS DATA KRITERIA BERDASARKAN ID KRITERIA
 exports.deleteKriteria = async (req, res) => {
-    const kriteriaId = req.params.kriteriaId
+    const kodeKriteria = req.params.kodeKriteria
     await Kriteria.destroy({ 
         where: { 
-            id: kriteriaId 
+            kode_kriteria: kodeKriteria 
         } 
     })
     .then(() => {
         res.status(200).json({
-            data: kriteriaId,
+            data: kodeKriteria,
             message: "Successfully deleted the criteria data",
         });
     })

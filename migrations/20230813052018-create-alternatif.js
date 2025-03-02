@@ -26,6 +26,9 @@ module.exports = {
       vikor_rank: {
         type: Sequelize.INTEGER
       },
+      vikor_hasil: {
+        type: Sequelize.STRING
+      },
       vikor_harga: {
         type: Sequelize.INTEGER
       },
@@ -34,6 +37,9 @@ module.exports = {
       },
       moora_rank: {
         type: Sequelize.INTEGER
+      },
+      moora_hasil: {
+        type: Sequelize.STRING
       },
       moora_harga: {
         type: Sequelize.INTEGER

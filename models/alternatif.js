@@ -16,6 +16,11 @@ module.exports = (sequelize, DataTypes) => {
         foreignKey: "kode_alternatif",
         sourceKey: "kode_alternatif"
       })
+      this.belongsTo(models.Kendaraan_Master, {
+        as: "data-alternatif",
+        foreignKey: "nama_alternatif",
+        targetKey: "nama_alternatif"
+      })
     }
   }
   Alternatif.init({
@@ -59,7 +64,7 @@ module.exports = (sequelize, DataTypes) => {
         notEmpty: {
           args: true,
           msg: "balance is required"
-        },
+        }, 
       }
     },
     vikor_rank: {
@@ -74,6 +79,16 @@ module.exports = (sequelize, DataTypes) => {
           msg: "vikor_rank must be integer"
         }
       }
+    },
+    vikor_hasil: {
+      type: DataTypes.STRING,
+      // allowNull: false,
+      // validate: {
+      //   notEmpty: {
+      //     args: true,
+      //     msg: "vikor_hasil is required"
+      //   },
+      // }
     },
     vikor_harga: {
       type: DataTypes.INTEGER,
@@ -110,6 +125,9 @@ module.exports = (sequelize, DataTypes) => {
         }
       }
     },
+    moora_hasil: {
+      type: DataTypes.STRING,
+    },
     moora_harga: {
       type: DataTypes.INTEGER,
       validate: {
@@ -120,9 +138,22 @@ module.exports = (sequelize, DataTypes) => {
         isInt: {
           args: true,
           msg: "moora_harga must be integer"
-        }
+        },
       }
-    }
+    },
+    hitung_harga: {
+      type: DataTypes.INTEGER,
+      validate: {
+        notEmpty: {
+          args: true,
+          msg: "hitung_harga is required"
+        },
+        isInt: {
+          args: true,
+          msg: "hitung_harga must be integer"
+        },
+      }
+    },
   }, {
     sequelize,
     modelName: 'Alternatif',
@@ -130,18 +161,26 @@ module.exports = (sequelize, DataTypes) => {
       beforeCreate: (alternatif, opt) => {
         const vikorTotal = 0;
         const vikorRank = 0;
-        const vikorHarga = 0;
+        const hitungHarga = 0;
         alternatif.vikor_total = vikorTotal;
         alternatif.vikor_rank = vikorRank;
-        alternatif.vikor_harga = vikorHarga;
+        alternatif.hitung_harga = hitungHarga;
 
-        const mooraTotal = 0;
+        const mooraTotal = 0; 
         const mooraRank = 0;
-        const mooraHarga = 0;
         alternatif.moora_total = mooraTotal;
         alternatif.moora_rank = mooraRank
-        alternatif.moora_harga = mooraHarga
-      }
+      },
+
+      // beforeUpdate:
+
+      // beforeValidate: (alternatif, opt) => {
+      //   const vikorHasil = "no data";
+      //   const mooraHasil = "no data";
+      //   alternatif.vikor_hasil = vikorHasil
+      //   alternatif.moora_hasil = mooraHasil
+      // },
+
     }
   });
   return Alternatif;

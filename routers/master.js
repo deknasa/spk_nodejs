@@ -2,11 +2,8 @@ const express = require("express")
 const router = express.Router()
 const { verify } = require("../middleware/authentication")
 const { adminAuthorization } = require("../middleware/authorization")
-const {
-    getRelAlternatif
-} = require("../controllers/vikor.controller")
+const { getAll } = require("../controllers/kendaraan_master.controller")
 
+router.get('/getAll', getAll)
 
-router.get('/getresult', getRelAlternatif) 
-
-module.exports = router
+module.exports = router 

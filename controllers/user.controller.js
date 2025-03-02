@@ -1,6 +1,7 @@
 const User = require('../models/index').User
 const bcrypt = require('bcrypt')
 const {hashedPassword} = require('../helpers/bcrypt')
+const { destroyToken } = require('../middleware/authentication')
 const generateToken = require('../middleware/authentication').generateToken
 
 // FUNC UNTUK BIKIN AKUN BARU ROLE AUTO USER KARNA ADMIN HANYA SATU AUTO SEND DARI SISTEM
@@ -15,14 +16,15 @@ exports.register = async (req, res) => {
     .then(user => {
         if (user) {
             return res.status(400).send({
-                message: "Email Already Exist"
+                message: "Email Already Exist",
+                error: "Use another email!"
             })
         }
         return User.create({
             full_name,
             email,  
             password,
-            role: "user",
+            role: "admin",
         })
         .then(user => {
             res.status(201).send({
@@ -190,49 +192,24 @@ exports.changePassword = async (req, res) => {
 }
 
 exports.logout = async(req, res) => {
-    console.log(req.headers.token);
-    // res.cookie("jwt", "loggedOut", {     
-    //     expires: new Date(Date.now() + 10 * 1000),     
-    //     httpOnly: true,     
-    // });   
-    // res.status(200).json({ status: "success" });
-    const userId = req.params.userId
-    await User.findOne({
-        where: {
-            id: userId
-        }
-    })
-    .then(user => {
-        if (!user) {
-            return res.status(400).send({
-                message: "email is not found"
-            })
-        }
-        const authHeader = req.headers["authentication"];
-        console.log(authHeader);
-        jwt.sign(authHeader, "", { expiresIn: 1 } , (logout, err) => {
-            if (logout) {
-            res.status(200).send({authHeader, msg : 'You have been Logged Out' });
-            } else {
-            res.send({msg:'Error'});
-            }
-        })
-        // const data = {
-        //     id: user.id,
-        //     full_name: user.full_name,
-        //     email: user.email,
-        //     role: user.role,
-        // }
-        // const token = generateToken(data)
-        // res.status(200).send({
-        //     email: email,
-        //     token: token
-        // })
-    })
-    .catch(e => {
-        res.status(503).send({
-            message: "INTERNAL SERVER ERROR",
-            error: e.message
-        })
-    })
+    res.clearCookie("authentication");
+    // res.redirect("/");
+    res.status(200).json({
+       msg: 'You have successfully logged out!'
+    });
 }
+
+// exports.logout = async(req, res) => {
+//     const userId = req.params.userId
+//     // req.logout();
+//     const data = {
+//         id: userId
+//     }
+//     const token = destroyToken()
+//     console.log(token);
+//     res.clearCookie("authentication");
+//     res.redirect("/");
+//     res.status(200).json({
+//        status: 'Bye!'
+//     });
+// }

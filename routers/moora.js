@@ -3,10 +3,10 @@ const router = express.Router()
 const { verify } = require("../middleware/authentication")
 const { adminAuthorization } = require("../middleware/authorization")
 const {
-    getRelAlternatif
-} = require("../controllers/vikor.controller")
+    mooraMethod
+} = require("../controllers/moora.controller")
 
 
-router.get('/getresult', getRelAlternatif) 
+router.get('/getresult', mooraMethod) 
 
 module.exports = router

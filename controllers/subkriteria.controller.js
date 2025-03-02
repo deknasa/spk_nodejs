@@ -10,7 +10,7 @@ exports.createSubkriteria = async (req, res) => {
             kode_kriteria: kode_kriteria,
         }
     })
-    .then(kriteria => {
+    .then(kriteria => { 
         console.log("a")
         if (!kriteria) {
             return res.status(400).send({
@@ -36,7 +36,7 @@ exports.createSubkriteria = async (req, res) => {
         .catch(e => {
             console.log(e);
             res.status(404).send({
-                message: "FAILED TO CREATE DATA SUBKRITERIA",
+                message: "FAILED TO CREATE SUBCRITERIA DATA",
                 error: e.message
             })
         })
@@ -90,7 +90,6 @@ exports.getSubkriteriaByKriteria = async (req, res) => {
         attributes: [
             'kode_kriteria', 
             'nama_kriteria',
-            // [Sequelize.literal('sub_kriteria.id'), 'idSubkriteria']
         ],
         include: {
             model: Sub_Kriteria,
